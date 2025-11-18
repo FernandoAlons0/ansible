@@ -3,42 +3,44 @@
   hosts: localhost
   connection: local
   gather_facts: no
+  vars:
+    base_path: "{{ playbook_dir }}/../.."
   tasks:
     - name: Minio — up
       community.docker.docker_compose_v2:
-        project_src: /home/runner/_work/minio
+        project_src: "{{ base_path }}/minio"
         state: present
       when: minio | default('up') == 'up'
 
     - name: Minio — down
       community.docker.docker_compose_v2:
-        project_src: /home/runner/_work/minio
+        project_src: "{{ base_path }}/minio"
         state: absent
         remove_orphans: yes
       when: minio | default('up') == 'down'
 
     - name: ELK — up
       community.docker.docker_compose_v2:
-        project_src: /home/runner/_work/elk
+        project_src: "{{ base_path }}/elk"
         state: present
       when: elk | default('up') == 'up'
 
     - name: ELK — down
       community.docker.docker_compose_v2:
-        project_src: /home/runner/_work/elk
+        project_src: "{{ base_path }}/elk"
         state: absent
         remove_orphans: yes
       when: elk | default('up') == 'down'
 
     - name: pg-cluster — up
       community.docker.docker_compose_v2:
-        project_src: /home/runner/_work/pg-cluster
+        project_src: "{{ base_path }}/pg-cluster"
         state: present
       when: pg_cluster | default('up') == 'up'
 
     - name: pg-cluster — down
       community.docker.docker_compose_v2:
-        project_src: /home/runner/_work/pg-cluster
+        project_src: "{{ base_path }}/pg-cluster"
         state: absent
         remove_volumes: yes
         remove_orphans: yes
