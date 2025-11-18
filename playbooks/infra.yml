@@ -6,39 +6,39 @@
   tasks:
     - name: Minio — up
       community.docker.docker_compose_v2:
-        project_src: /home/aeisaev/minio
+        project_src: /home/runner/minio
         state: present
       when: minio | default('up') == 'up'
 
     - name: Minio — down
       community.docker.docker_compose_v2:
-        project_src: /home/aeisaev/minio
+        project_src: /home/runner/minio
         state: absent
         remove_orphans: yes
       when: minio | default('up') == 'down'
 
     - name: ELK — up
       community.docker.docker_compose_v2:
-        project_src: /home/aeisaev/elk
+        project_src: /home/runner/elk
         state: present
       when: elk | default('up') == 'up'
 
     - name: ELK — down
       community.docker.docker_compose_v2:
-        project_src: /home/aeisaev/elk
+        project_src: /home/runner/elk
         state: absent
         remove_orphans: yes
       when: elk | default('up') == 'down'
 
     - name: pg-cluster — up
       community.docker.docker_compose_v2:
-        project_src: /home/aeisaev/pg-cluster
+        project_src: /home/runner/pg-cluster
         state: present
       when: pg_cluster | default('up') == 'up'
 
     - name: pg-cluster — down
       community.docker.docker_compose_v2:
-        project_src: /home/aeisaev/pg-cluster
+        project_src: /home/runner/pg-cluster
         state: absent
         remove_volumes: yes
         remove_orphans: yes
