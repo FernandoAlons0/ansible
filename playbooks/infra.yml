@@ -5,26 +5,26 @@
   gather_facts: no
   tasks:
     - name: Minio — up
-      community.docker.docker_compose:
+      community.docker.docker_compose_v2:
         project_src: /home/aeisaev/minio
         state: present
       when: minio | default('up') == 'up'
 
     - name: Minio — down
-      community.docker.docker_compose:
+      community.docker.docker_compose_v2:
         project_src: /home/aeisaev/minio
         state: absent
         remove_orphans: yes
       when: minio | default('up') == 'down'
 
     - name: ELK — up
-      community.docker.docker_compose:
+      community.docker.docker_compose_v2:
         project_src: /home/aeisaev/elk
         state: present
       when: elk | default('up') == 'up'
 
     - name: ELK — down
-      community.docker.docker_compose:
+      community.docker.docker_compose_v2:
         project_src: /home/aeisaev/elk
         state: absent
         remove_orphans: yes
@@ -37,7 +37,7 @@
       when: pg_cluster | default('up') == 'up'
 
     - name: pg-cluster — down
-      community.docker.docker_compose:
+      community.docker.docker_compose_v2:
         project_src: /home/aeisaev/pg-cluster
         state: absent
         remove_volumes: yes

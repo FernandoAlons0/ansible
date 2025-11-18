@@ -39,10 +39,13 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y docker-compose-plugin
 
-      - name: Install Ansible
+        - name: Install latest Ansible
         run: |
           sudo apt-get update
-          sudo apt-get install -y ansible
+          sudo apt-get install -y python3-pip
+          python3 -m pip install --user --upgrade pip
+          python3 -m pip install --user ansible
+          echo "$HOME/.local/bin" >> $GITHUB_PATH
 
       - name: Install community.docker collection
         run: ansible-galaxy collection install community.docker
