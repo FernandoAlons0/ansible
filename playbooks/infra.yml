@@ -4,52 +4,44 @@
   connection: local
   gather_facts: no
   vars:
-    base_path: "{{ playbook_dir }}/../.."
+    work_dir: "/home/runner"
   tasks:
     - name: Minio — up
       community.docker.docker_compose_v2:
-        project_src: "{{ base_path }}/minio"
+        project_src: "{{ work_dir }}/minio"
         state: present
       when: minio | default('up') == 'up'
 
     - name: Minio — down
       community.docker.docker_compose_v2:
-        project_src: "{{ base_path }}/minio"
+        project_src: "{{ work_dir }}/minio"
         state: absent
         remove_orphans: yes
       when: minio | default('up') == 'down'
 
     - name: ELK — up
       community.docker.docker_compose_v2:
-        project_src: "{{ base_path }}/elk"
+        project_src: "{{ work_dir }}/elk"
         state: present
       when: elk | default('up') == 'up'
 
     - name: ELK — down
       community.docker.docker_compose_v2:
-        project_src: "{{ base_path }}/elk"
+        project_src: "{{ work_dir }}/elk"
         state: absent
         remove_orphans: yes
       when: elk | default('up') == 'down'
 
     - name: pg-cluster — up
       community.docker.docker_compose_v2:
-        project_src: "{{ base_path }}/pg-cluster"
+        project_src: "{{ work_dir }}/pg-cluster"
         state: present
       when: pg_cluster | default('up') == 'up'
 
     - name: pg-cluster — down
       community.docker.docker_compose_v2:
-        project_src: "{{ base_path }}/pg-cluster"
+        project_src: "{{ work_dir }}/pg-cluster"
         state: absent
         remove_volumes: yes
         remove_orphans: yes
       when: pg_cluster | default('up') == 'down'
-
-    - name: Показать статус всех сервисов
-      command: docker compose ls
-      register: status
-
-    - name: Вывод статуса
-      debug:
-        msg: "\n{{ status.stdout }}"
