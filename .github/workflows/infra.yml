@@ -50,6 +50,9 @@ jobs:
       - name: Install community.docker collection
         run: ansible-galaxy collection install community.docker
 
+      - name: Fix Docker socket permissions
+        run: sudo chmod 666 /var/run/docker.sock
+
       - name: Управление инфраструктурой
         run: |
           ansible-playbook playbooks/infra.yml \
