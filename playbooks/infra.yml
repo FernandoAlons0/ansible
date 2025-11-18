@@ -31,7 +31,7 @@
       when: elk | default('up') == 'down'
 
     - name: pg-cluster — up
-      community.docker.docker.docker_compose:
+      community.docker.docker_compose_v2:
         project_src: /home/aeisaev/pg-cluster
         state: present
       when: pg_cluster | default('up') == 'up'
