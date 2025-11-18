@@ -19,18 +19,49 @@
         remove_orphans: yes
       when: minio | default('up') == 'down'
 
+    - name: Проверить доступность ELK директории
+      debug:
+        msg: "ELK путь: {{ work_dir }}/elk, существует: {{ (lookup('file', work_dir + '/elk/docker-compose.yml') is not none) | default(false) }}"
+
+    - name: Показать docker-compose файл ELK
+      command: cat {{ work_dir }}/elk/docker-compose.yml
+      register: elk_compose
+      failed_when: false
+
+    - name: Вывести содержимое docker-compose ELK
+      debug:
+        msg: "{{ elk_compose.stdout }}"
+
     - name: ELK — up
       community.docker.docker_compose_v2:
         project_src: "{{ work_dir }}/elk"
         state: present
       when: elk | default('up') == 'up'
+      register: elk_result
 
-    - name: ELK — down
-      community.docker.docker_compose_v2:
-        project_src: "{{ work_dir }}/elk"
-        state: absent
-        remove_orphans: yes
-      when: elk | default('up') == 'down'
+    - name: Показать результат ELK
+      debug:
+        var: elk_result
+
+    - name: Проверить статус контейнеров ELK
+      command: docker ps -a --filter "name=elk"
+      register: elk_containers
+      failed_when: false
+
+    - name: Показать статус контейнеров ELK
+      debug:
+        var: elk_containers.stdout
+
+    - name: Показать логи ELK при ошибке
+      command: docker logs elk-elasticsearch-1
+      register: elk_logs
+      failed_when: false
+      when: elk_result is failed
+
+    - name: Вывести логи ELK
+      debug:
+        var: elk_logs.stdout
+      when: elk_result is failed
 
     - name: pg-cluster — up
       community.docker.docker_compose_v2:
