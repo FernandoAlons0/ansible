@@ -1,0 +1,40 @@
+name: Infra Control
+
+on:
+  workflow_dispatch:
+    inputs:
+      minio:
+        description: 'minio: up / down'
+        required: true
+        default: up
+        type: choice
+        options: [up, down]
+      elk:
+        description: 'elk: up / down'
+        required: true
+        default: up
+        type: choice
+        options: [up, down]
+      pg_cluster:
+        description: 'pg-cluster: up / down'
+        required: true
+        default: up
+        type: choice
+        options: [up, down]
+
+jobs:
+  control:
+    runs-on: self-hosted
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install docker-compose plugin
+        run: |
+          sudo apt update && sudo apt install -y docker-compose-plugin
+
+      - name: Управление инфраструктурой
+        run: |
+          ansible-playbook playbooks/infra.yml \
+            -e "minio=${{ inputs.minio }}" \
+            -e "elk=${{ inputs.elk }}" \
+            -e "pg_cluster=${{ inputs.pg_cluster }}"
